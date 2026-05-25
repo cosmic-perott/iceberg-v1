@@ -8,7 +8,7 @@ const userId = "user-" + Math.random().toString(36).substring(7);
 
 const getBaseUrl = () => {
   if (!AGENT_ID) {
-    throw new Error("AGENT_ID environment variable is missing. Please set it to your deployed Agent ID (projects/.../locations/.../reasoningEngines/...).");
+    throw new Error("AGENT_ID environment variable is missing. Please set it to your deployed Agent ID (e.g., projects/123/locations/us-central1/reasoningEngines/456).");
   }
   const parts = AGENT_ID.split('/');
   if (parts.length < 6) {
@@ -32,7 +32,8 @@ export const initChat = async () => {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to create ADK session: ${response.statusText}`);
+    const errorText = await response.text().catch(() => 'Unknown error');
+    throw new Error(`Failed to create ADK session (${response.status}): ${errorText}`);
   }
 
   const data = await response.json();
@@ -61,7 +62,8 @@ export const sendMessageStream = async function* (message: string) {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to stream query from ADK: ${response.statusText}`);
+    const errorText = await response.text().catch(() => 'Unknown error');
+    throw new Error(`Failed to stream query from ADK (${response.status}): ${errorText}`);
   }
 
   if (!response.body) {
@@ -69,16 +71,19 @@ export const sendMessageStream = async function* (message: string) {
   }
 
   const decoder = new TextDecoder();
+  let buffer = '';
   
   // @ts-ignore - async iteration over ReadableStream is supported in modern browsers
   for await (const chunk of response.body) {
-    const chunkText = decoder.decode(chunk, { stream: true });
+    buffer += decoder.decode(chunk, { stream: true });
     
-    try {
-      // Handle potential multiple JSON objects separated by newlines (NDJSON format)
-      const lines = chunkText.split('\n').filter(line => line.trim() !== '');
-      
-      for (const line of lines) {
+    // Split by newline to handle NDJSON, keeping the last incomplete line in the buffer
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || ''; 
+    
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      try {
         const data = JSON.parse(line);
         
         // Extract the text part from the ADK response structure
@@ -88,9 +93,24 @@ export const sendMessageStream = async function* (message: string) {
             yield text;
           }
         }
+      } catch (e) {
+        console.warn("Failed to parse ADK chunk line:", line);
+      }
+    }
+  }
+
+  // Process any remaining data in the buffer
+  if (buffer.trim()) {
+    try {
+      const data = JSON.parse(buffer);
+      if (data.content && data.content.parts && data.content.parts.length > 0) {
+        const text = data.content.parts[0].text;
+        if (text) {
+          yield text;
+        }
       }
     } catch (e) {
-      console.warn("Failed to parse ADK chunk:", chunkText);
+      console.warn("Failed to parse final ADK chunk:", buffer);
     }
   }
 };
