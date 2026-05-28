@@ -19,16 +19,16 @@ let db;
 
 (async function initializeServer() {
   try {
-    console.log("🔄 Attempting to connect to MongoDB Atlas...");
+    console.log("Attempting to connect to MongoDB Atlas...");
     await client.connect();
     db = client.db("sample_airbnb"); 
-    console.log("✅ Successfully connected to sample_airbnb database!");
+    console.log("Successfully connected to sample_airbnb database!");
 
     app.listen(port, () => {
-      console.log(`🚀 Secure Express MCP Server is running perfectly on port ${port}!`);
+      console.log(`Secure Express MCP Server is running perfectly on port ${port}!`);
     });
   } catch (err) {
-    console.error("❌ Critical error during server initialization:", err);
+    console.error("Critical error during server initialization:", err);
     process.exit(1);
   }
 })();
