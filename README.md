@@ -1,7 +1,8 @@
-<img width="345" height="125" alt="Screenshot 2026-05-25 at 1 09 12 PM" src="https://github.com/user-attachments/assets/74fc917d-7161-43cb-984e-ba2bd8119303" />
+<img width="494" height="159" alt="Screenshot 2026-05-28 at 12 17 06 PM" src="https://github.com/user-attachments/assets/3a3d5f4d-44a8-4bee-9f71-31ee4f4f2f5c" />
 
 ###
-<img width="570" height="57" alt="Screenshot 2026-05-25 at 8 18 24 PM" src="https://github.com/user-attachments/assets/c3888cbd-1841-4d65-a0f0-5daec6d75759" />
+<img width="788" height="63" alt="Screenshot 2026-05-28 at 12 19 15 PM" src="https://github.com/user-attachments/assets/356c21a9-af0b-4089-80ee-c2a76bfc0e48" />
+
 
 ***all code, architecture, ideas were made by cosmic-perott for the Google Cloud Rapid Agent Hackathon 2026***
 # IceBerg: Travel Agent
