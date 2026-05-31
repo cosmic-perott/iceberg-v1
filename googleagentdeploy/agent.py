@@ -6,7 +6,8 @@ from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
 from mcp import StdioServerParameters
 
-CONNECTION_STRING = [MONGODB_URI]
+CONNECTION_STRING = [MONGO_URI]
+
 
 hotel_expert_agent_mongodb_agent = LlmAgent(
     name="hotel_expert_agent_mongodb",
@@ -34,7 +35,7 @@ hotel_expert_agent_mongodb_agent = LlmAgent(
 )
 
 food_critic_agent_mongodb_agent = LlmAgent(
-    name="food_critic_agent_mongodb",  # FIXED: Had duplicate name
+    name="food_critic_agent_mongodb",  
     model="gemini-2.5-flash",
     description='A database assistant that MUST use its McpToolset to execute live MongoDB queries.',
     sub_agents=[],
@@ -59,7 +60,7 @@ food_critic_agent_mongodb_agent = LlmAgent(
 )
 
 attraction_scout_agent_mongodb_agent = LlmAgent(
-    name="attraction_scout_agent_mongodb",  
+    name="attraction_scout_agent_mongodb",  # FIXED: Had duplicate name
     model="gemini-2.5-flash",
     description='A database assistant that MUST use its McpToolset to execute live MongoDB queries.',
     sub_agents=[],
@@ -82,7 +83,6 @@ attraction_scout_agent_mongodb_agent = LlmAgent(
         )
     ],
 )
-
 
 
 hotel_expert_agent_google_search_agent = LlmAgent(
